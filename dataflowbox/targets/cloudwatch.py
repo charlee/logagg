@@ -3,7 +3,7 @@ from ..base import Target
 
 
 class CloudWatch(Target):
-    def __init__(self, namespace, hostname, aws_profile=None, aws_config=None):
+    def __init__(self, namespace, metric_name, instance_id, aws_profile=None, aws_config=None):
         super().__init__()
 
         if aws_config is not None:
@@ -17,8 +17,10 @@ class CloudWatch(Target):
             self.client = session.client('cloudwatch')
         else:
             self.client = boto3.client('cloudwatch')
+
         self.namespace = namespace
-        self.hostname = hostname
+        self.metric_name = metric_name
+        self.instance_id = instance_id
 
 
     def notify(self, event):
@@ -27,9 +29,9 @@ class CloudWatch(Target):
                 Namespace=self.namespace,
                 MetricData=[
                     {
-                        'MetricName': 'HTTP_REQUEST_RATE',
+                        'MetricName': self.metric_name,
                         'Dimensions': [
-                            { 'Name': 'Hostname', 'Value': self.hostname },
+                            { 'Name': 'InstanceId', 'Value': self.instance_id },
                         ],
                         'Timestamp': event.payload['datetime'],
                         'Value': event.payload['count'],

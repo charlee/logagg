@@ -17,7 +17,7 @@ def log_aggregate(filename, aws_profile='default'):
     request_rate = HttpRequestRate()
 
     output1 = Print()
-    output2 = CloudWatch('ECE1779-A2', instance_id, aws_profile=aws_profile)
+    output2 = CloudWatch('ECE1779/A2', 'HttpRequestRate', instance_id, aws_profile=aws_profile)
 
     tail.subscribe(elf)
 
